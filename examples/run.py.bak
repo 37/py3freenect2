@@ -13,5 +13,5 @@ while True:
     resized = scipy.misc.imresize(extracted_frame.BGR, size = 0.5)
     cv2.imshow("RGB", resized)
     cv2.waitKey(20)
-print("done")
+print "done"
     

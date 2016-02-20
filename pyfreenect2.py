@@ -26,7 +26,7 @@ class PyFreeNect2(object):
                 self.kinect.start()
                 self.registration = Registration(self.kinect.ir_camera_params, 
                                                  self.kinect.color_camera_params)
-                print "%s setup done" % (self.__class__.__name__)
+                print("%s setup done" % (self.__class__.__name__))
 
         def get_new_frame(self, get_BGR = False):
                 frames = self.frameListener.waitForNewFrame()
@@ -91,7 +91,7 @@ class Freenect2Device:
 		if not isinstance(listener, SyncMultiFrameListener):
 			raise TypeError("Argument to Freenect2Device.setColorFrameListener must be of type Freenect2Device.SyncMultiFrameListener")
 		else:
-                        print "listener capsule : " , listener._capsule
+			print("listener capsule : " , listener._capsule)
 			_pyfreenect2.Freenect2Device_setColorFrameListener(self._capsule, listener._capsule)
 	def setIrAndDepthFrameListener(self, listener):
 		if not isinstance(listener, SyncMultiFrameListener):
@@ -156,12 +156,12 @@ class Frame:
                 ## todo fix fliplr necessity
                 ## todo fix BGR :/
 		BGR = np.fliplr(_pyfreenect2.Frame_getData(self._capsule).copy())
-                RGB = swap_c0c2(BGR)
-                return RGB
-                                
+		RGB = swap_c0c2(BGR)
+		return RGB
+
 	def getDepthData(self):
-                ## todo fix copy necessity (reference counting to frame)                
-                ## todo fix fliplr necessity
+		## todo fix copy necessity (reference counting to frame)
+		## todo fix fliplr necessity
 		return np.fliplr(_pyfreenect2.Frame_getDepthData(self._capsule).copy())
 
 ################################################################################

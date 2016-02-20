@@ -1,7 +1,36 @@
+#include "Python.h"
 #include "pyfreenect2.hpp"
 #include <iostream>
 
-static PyMethodDef pyfreenect2Methods[] = {
+struct module_state {
+	PyObject *error;
+};
+
+#if PY_MAJOR_VERSION >= 3
+#define GETSTATE(m) ((struct module_state*)PyModule_GetState(m))
+#else
+#define GETSTATE(m) (&_state)
+static struct module_state _state;
+#endif
+
+static PyObject *
+error_out(PyObject *m) {
+	struct module_state *st = GETSTATE(m);
+	PyErr_SetString(st->error, "something bad happened");
+	return NULL;
+}
+
+static int pyfreenect2_traverse(PyObject *m, visitproc visit, void *arg) {
+	Py_VISIT(GETSTATE(m)->error);
+	return 0;
+}
+
+static int pyfreenect2_clear(PyObject *m) {
+	Py_CLEAR(GETSTATE(m)->error);
+	return 0;
+}
+
+static PyMethodDef pyfreenect2_methods[] = {
 	// Freenect2
 	{ "numberOfDevices", py_numberOfDevices, METH_VARARGS, NULL },
 	{ "getDefaultDeviceSerialNumber", py_getDefaultDeviceSerialNumber, METH_VARARGS, NULL },
@@ -32,12 +61,25 @@ static PyMethodDef pyfreenect2Methods[] = {
 	{ NULL, NULL, 0, NULL}
 };
 
-PyMODINIT_FUNC init_pyfreenect2() {
+static struct PyModuleDef pyfreenect2_module = {
+	PyModuleDef_HEAD_INIT,
+	"_pyfreenect2",
+	NULL,
+	sizeof(struct module_state),
+	pyfreenect2_methods,
+	NULL,
+	pyfreenect2_traverse,
+	pyfreenect2_clear,
+	NULL
+};
+
+PyMODINIT_FUNC
+PyInit__pyfreenect2() {
 
   /// enables debug of libfreenect2
-  ///libfreenect2::setGlobalLogger(libfreenect2::createConsoleLogger(libfreenect2::Logger::Debug));
+  /// libfreenect2::setGlobalLogger(libfreenect2::createConsoleLogger(libfreenect2::Logger::Debug));
 
   import_array();
-  Py_InitModule("_pyfreenect2", pyfreenect2Methods);
+  return PyModule_Create(&pyfreenect2_module);
   import_array();
 }
