@@ -1,12 +1,12 @@
-pyfreenect2
+py3freenect2
 ===========
 
-Python bindings to [libfreenect2](https://github.com/OpenKinect/libfreenect2).
+Python bindings for [libfreenect2](https://github.com/OpenKinect/libfreenect2).
 
 Requirements
 ---------
 
-- Python3 (python2 support : https://github.com/remexre/pyfreenect2)
+- Python3 (python2 support : https://github.com/remexre/pyfreenect2; backwards compatibility to come)
 - Numpy
 - Scipy (as appropriated by python version) : 
 - Python Imaging Library (used for scipy.misc.im* functions) : http://www.pythonware.com/products/pil/
